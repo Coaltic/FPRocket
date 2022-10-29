@@ -26,11 +26,16 @@ public class Ship : MonoBehaviour
         rightOfScreen = (topOfScreen) * Camera.main.aspect;
         leftOfScreen = -((topOfScreen) * Camera.main.aspect);
 
+        shipRigidbody.isKinematic = true;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!GameManager.gameplayActive) return;
+        if (GameManager.gameplayActive) shipRigidbody.isKinematic = false;
+        
+
         shipVelocity = shipRigidbody.velocity;
         if (shipVelocity.y > 6.0f) shipRigidbody.velocity = new Vector3(shipVelocity.x, 6.0f, shipVelocity.z);
         if (shipVelocity.y < -8.0f) shipRigidbody.velocity = new Vector3(shipVelocity.x, -8.0f, shipVelocity.z);
@@ -86,6 +91,7 @@ public class Ship : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         Destroy(ship);
+        GameManager.control.SwitchState(GameManager.State.InLoseScreen);
     }
 
 }
