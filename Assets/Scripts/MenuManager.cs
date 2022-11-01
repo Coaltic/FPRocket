@@ -24,6 +24,7 @@ public class MenuManager : MonoBehaviour
     public Button noThanksButton;
 
     public Text scoreText;
+    public Text fpsText;
 
     void Awake()
     {
@@ -48,6 +49,7 @@ public class MenuManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        fpsText.text = "FPS: " + (int)(1.0f / Time.deltaTime);
         switch (GameManager.control.currentState)
         {
             case GameManager.State.InMenu:

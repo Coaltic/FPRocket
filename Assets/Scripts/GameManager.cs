@@ -102,6 +102,8 @@ public class GameManager : MonoBehaviour
             case State.InLoseScreen:
                 if (gameplayActive) gameplayActive = false;
                 if (ship.activeSelf) ship.SetActive(false);
+
+                if (currentScore > highScore) highScore = currentScore;
                 PlayerPrefs.SetInt("highScore", highScore);
                 break;
 

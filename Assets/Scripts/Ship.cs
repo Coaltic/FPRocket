@@ -95,6 +95,7 @@ public class Ship : MonoBehaviour
         {
             GameManager.control.currentScore += other.gameObject.GetComponentInParent<Barrier>().barrierScore;
             other.gameObject.GetComponentInParent<Barrier>().scoreRecieved = true;
+            other.gameObject.GetComponentInParent<Barrier>().speed = 30;
         }
     }
 }

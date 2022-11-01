@@ -44,6 +44,7 @@ public class Barrier : MonoBehaviour
 
     public void Recalculate()
     {
+        speed = 20;
         barrier.transform.position = startPosition;
         barrierScore = 0;
         scoreRecieved = false;
