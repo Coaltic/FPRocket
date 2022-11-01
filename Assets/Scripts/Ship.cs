@@ -8,6 +8,7 @@ public class Ship : MonoBehaviour
     public GameObject ship;
     public Rigidbody shipRigidbody;
     public Vector3 shipVelocity;
+    public Vector3 shipStartPosition;
 
     public float topOfScreen;
     public float bottomOfScreen;
@@ -19,6 +20,7 @@ public class Ship : MonoBehaviour
     {
         ship = this.gameObject;
         shipRigidbody = ship.GetComponent<Rigidbody>();
+        shipStartPosition = ship.transform.position;
         
         topOfScreen = Camera.main.orthographicSize;
         bottomOfScreen = -Camera.main.orthographicSize;
@@ -29,7 +31,6 @@ public class Ship : MonoBehaviour
         shipRigidbody.isKinematic = true;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!GameManager.gameplayActive) return;
@@ -87,11 +88,13 @@ public class Ship : MonoBehaviour
 
     }
 
-
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        Destroy(ship);
-        GameManager.control.SwitchState(GameManager.State.InLoseScreen);
+        if (other.gameObject.GetComponent<MeshRenderer>().enabled) GameManager.control.SwitchState(GameManager.State.InLoseScreen);
+        else if (!other.gameObject.GetComponentInParent<Barrier>().scoreRecieved)
+        {
+            GameManager.control.currentScore += other.gameObject.GetComponentInParent<Barrier>().barrierScore;
+            other.gameObject.GetComponentInParent<Barrier>().scoreRecieved = true;
+        }
     }
-
 }

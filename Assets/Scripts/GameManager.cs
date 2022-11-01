@@ -7,12 +7,18 @@ public class GameManager : MonoBehaviour
 
     static public GameManager control;
     static public bool gameplayActive;
+    public GameObject ship;
+    public GameObject barrier;
+
+    public int currentScore;
+    public int highScore;
 
     public enum State
     {
         InMenu,
         InOptions,
         InGameplay,
+        InReplay,
         InWinScreen,
         InLoseScreen,
         InCredits
@@ -39,7 +45,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        highScore = PlayerPrefs.GetInt("highScore");
     }
 
     // Update is called once per frame
@@ -49,10 +55,15 @@ public class GameManager : MonoBehaviour
         switch (currentState)
         {
             case State.InMenu:
-                if (gameplayActive)
+                if (gameplayActive) gameplayActive = false;
+                if (ship.activeSelf == false) 
                 {
-                    gameplayActive = false;
-                    Debug.Log("Gameplay Active: " + gameplayActive);
+                    PlayerPrefs.SetInt("highScore", highScore);
+                    barrier.SetActive(false);
+                    ship.transform.position = ship.GetComponent<Ship>().shipStartPosition;
+                    ship.GetComponent<Rigidbody>().isKinematic = true;
+                    ship.SetActive(true);
+                    currentScore = 0;
                 }
                 break;
 
@@ -64,22 +75,34 @@ public class GameManager : MonoBehaviour
             case State.InGameplay:
                 if (!gameplayActive)
                 {
+                    barrier.GetComponent<Barrier>().Recalculate();
+                    barrier.SetActive(true);
                     gameplayActive = true;
-                    Debug.Log("Gameplay Active: " + gameplayActive);
                 }
+                if (currentScore > highScore) highScore = currentScore;
+                PlayerPrefs.SetInt("highScore", highScore);
+                break;
+
+            case State.InReplay:
+                if (!gameplayActive)
+                {
+                    barrier.transform.position += Vector3.forward * 35;
+                    ship.SetActive(true);
+                    gameplayActive = true;
+                }
+                PlayerPrefs.SetInt("highScore", highScore);
                 break;
 
             case State.InWinScreen:
                 if (gameplayActive) gameplayActive = false;
                 Debug.Log("Gameplay Active: " + gameplayActive);
+                PlayerPrefs.SetInt("highScore", highScore);
                 break;
 
             case State.InLoseScreen:
-                if (gameplayActive)
-                {
-                    gameplayActive = false;
-                    Debug.Log("Gameplay Active: " + gameplayActive);
-                }
+                if (gameplayActive) gameplayActive = false;
+                if (ship.activeSelf) ship.SetActive(false);
+                PlayerPrefs.SetInt("highScore", highScore);
                 break;
 
             case State.InCredits:

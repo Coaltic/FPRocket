@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class Barrier : MonoBehaviour
 {
-    //public bool gameActive = false;
+    public bool scoreRecieved = false;
+
     public float speed = 15;
+    public int barrierScore;
     public GameObject background;
     public GameObject barrier;
     public GameObject[] blocks;
+
+    public Vector3 startPosition;
 
     void Awake()
     {
@@ -17,16 +21,14 @@ public class Barrier : MonoBehaviour
         barrier = this.gameObject;
         blocks = new GameObject[barrier.transform.childCount];
 
+        startPosition = background.transform.position + (Vector3.forward * 5);
+
         for (int i = 0; i < barrier.transform.childCount; i++)
         {
             blocks[i] = barrier.transform.GetChild(i).gameObject;
         }
 
-        foreach (GameObject block in blocks)
-        {
-            float num = Random.Range(0f, 1f);
-            if (num < 0.5f) block.SetActive(false);
-        }
+        Recalculate();
     }
 
     // Update is called once per frame
@@ -34,7 +36,6 @@ public class Barrier : MonoBehaviour
     {
         if (barrier.transform.position.z < Camera.main.transform.position.z - barrier.gameObject.transform.localScale.z && GameManager.gameplayActive)
         {
-            barrier.transform.position = background.transform.position + (Vector3.forward * 5);
             Recalculate();
         }
 
@@ -43,17 +44,20 @@ public class Barrier : MonoBehaviour
 
     public void Recalculate()
     {
+        barrier.transform.position = startPosition;
+        barrierScore = 0;
+        scoreRecieved = false;
+
         foreach (GameObject block in blocks)
         {
             float num = Random.Range(0f, 1f);
 
-            if (num < 0.5f) block.SetActive(false);
-            else block.SetActive(true);
+            if (num < 0.5f) block.GetComponent<MeshRenderer>().enabled = false;
+            else
+            {
+                block.GetComponent<MeshRenderer>().enabled = true;
+                barrierScore += 1;
+            }
         }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        
     }
 }
