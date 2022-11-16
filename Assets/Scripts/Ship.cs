@@ -90,7 +90,7 @@ public class Ship : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.GetComponent<MeshRenderer>().enabled) GameManager.control.SwitchState(GameManager.State.InLoseScreen);
+        if (other.gameObject.GetComponent<MeshRenderer>().enabled) GameManager.control.SwitchState(GameManager.GameState.InLoseScreen);
         else if (!other.gameObject.GetComponentInParent<Barrier>().scoreRecieved)
         {
             GameManager.control.currentScore += other.gameObject.GetComponentInParent<Barrier>().barrierScore;

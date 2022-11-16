@@ -49,29 +49,33 @@ public class MenuManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        fpsText.text = "FPS: " + (int)(1.0f / Time.deltaTime);
+        //fpsText.text = "FPS: " + (int)(1.0f / Time.deltaTime);
         switch (GameManager.control.currentState)
         {
-            case GameManager.State.InMenu:
+            case GameManager.GameState.InMenu:
                 if (!enteredMenu) return;
                 playButton.transform.DOMove(playButtonStartPosition, 2.0f, true);
                 enteredMenu = false;
                 scoreText.text = "HIGH SCORE: \n" + GameManager.control.highScore;
                 break;
 
-            case GameManager.State.InOptions:
+            case GameManager.GameState.InOptions:
                 
                 break;
 
-            case GameManager.State.InGameplay:
+            case GameManager.GameState.InGameplay:
                 scoreText.text = "SCORE: \n" + GameManager.control.currentScore;
                 break;
 
-            case GameManager.State.InWinScreen:
+            case GameManager.GameState.InReplay:
+                scoreText.text = "SCORE: \n" + GameManager.control.currentScore;
+                break;
+
+            case GameManager.GameState.InWinScreen:
                 
                 break;
 
-            case GameManager.State.InLoseScreen:
+            case GameManager.GameState.InLoseScreen:
                 //if (!replay) 
                     retryButton.transform.DOMove(retryButtonStartPosition, 2.0f, true);;
                 //replay = true;
@@ -80,7 +84,7 @@ public class MenuManager : MonoBehaviour
                 if (adSkipTimer <= 0.0f) noThanksButton.transform.DOMove(playButtonStartPosition, 2.0f, true);
                 break;
 
-            case GameManager.State.InCredits:
+            case GameManager.GameState.InCredits:
                 
                 break;
         }
@@ -95,7 +99,7 @@ public class MenuManager : MonoBehaviour
 
     public void OnClickRetry()
     {
-        GameManager.control.SwitchState(GameManager.State.InReplay);
+        GameManager.control.SwitchState(GameManager.GameState.InReplay);
         noThanksButton.transform.DOMove(playButtonEndPosition, 2.0f, true);
         retryButton.transform.DOMove(retryButtonEndPosition, 2.0f, true);
         ResetTimer();
@@ -105,7 +109,7 @@ public class MenuManager : MonoBehaviour
     public void OnClickNoThanks()
     {
         if (GameManager.control.currentScore > GameManager.control.highScore) GameManager.control.highScore = GameManager.control.currentScore;
-        GameManager.control.SwitchState(GameManager.State.InMenu);
+        GameManager.control.SwitchState(GameManager.GameState.InMenu);
         retryButton.transform.DOMove(retryButtonEndPosition, 2.0f, true);
         noThanksButton.transform.DOMove(playButtonEndPosition, 2.0f, true);
         enteredMenu = true;
@@ -114,14 +118,14 @@ public class MenuManager : MonoBehaviour
 
     public void OnCompletePlay()
     {
-        GameManager.control.SwitchState(GameManager.State.InGameplay);
+        GameManager.control.SwitchState(GameManager.GameState.InGameplay);
         
     }
 
     public void OnCompleteLose()
     {
         enteredMenu = true;
-        GameManager.control.SwitchState(GameManager.State.InMenu);
+        GameManager.control.SwitchState(GameManager.GameState.InMenu);
     }
 
     public void ResetTimer()

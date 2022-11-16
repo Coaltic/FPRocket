@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public int currentScore;
     public int highScore;
 
-    public enum State
+    public enum GameState
     {
         InMenu,
         InOptions,
@@ -24,8 +24,8 @@ public class GameManager : MonoBehaviour
         InCredits
     }
 
-    public State currentState;
-    public State previousState;
+    public GameState currentState;
+    public GameState previousState;
 
     void Awake()
     {
@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
 
         switch (currentState)
         {
-            case State.InMenu:
+            case GameState.InMenu:
                 if (gameplayActive) gameplayActive = false;
                 if (ship.activeSelf == false) 
                 {
@@ -67,12 +67,12 @@ public class GameManager : MonoBehaviour
                 }
                 break;
 
-            case State.InOptions:
+            case GameState.InOptions:
                 if (gameplayActive) gameplayActive = false;
                 Debug.Log("Gameplay Active: " + gameplayActive);
                 break;
 
-            case State.InGameplay:
+            case GameState.InGameplay:
                 if (!gameplayActive)
                 {
                     barrier.GetComponent<Barrier>().Recalculate();
@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
                 PlayerPrefs.SetInt("highScore", highScore);
                 break;
 
-            case State.InReplay:
+            case GameState.InReplay:
                 if (!gameplayActive)
                 {
                     barrier.transform.position += Vector3.forward * 35;
@@ -93,13 +93,13 @@ public class GameManager : MonoBehaviour
                 PlayerPrefs.SetInt("highScore", highScore);
                 break;
 
-            case State.InWinScreen:
+            case GameState.InWinScreen:
                 if (gameplayActive) gameplayActive = false;
                 Debug.Log("Gameplay Active: " + gameplayActive);
                 PlayerPrefs.SetInt("highScore", highScore);
                 break;
 
-            case State.InLoseScreen:
+            case GameState.InLoseScreen:
                 if (gameplayActive) gameplayActive = false;
                 if (ship.activeSelf) ship.SetActive(false);
 
@@ -107,14 +107,14 @@ public class GameManager : MonoBehaviour
                 PlayerPrefs.SetInt("highScore", highScore);
                 break;
 
-            case State.InCredits:
+            case GameState.InCredits:
                 if (gameplayActive) gameplayActive = false;
                 Debug.Log("Gameplay Active: " + gameplayActive);
                 break;
         }
     }
 
-    public void SwitchState(State state)
+    public void SwitchState(GameState state)
     {
         previousState = currentState;
         currentState = state;
